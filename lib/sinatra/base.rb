@@ -1140,7 +1140,7 @@ module Sinatra
         handler_name = handler.name.gsub(/.*::/, '')
         puts "== Sinatra/#{Sinatra::VERSION} has taken the stage " +
           "on #{port} for #{environment} with backup from #{handler_name}" unless handler_name =~/cgi/i
-        handler.run self, :Host => bind, :Port => port do |server|
+        handler.run self, extraoptions.merge(:Host => bind, :Port => port) do |server|
           [:INT, :TERM].each { |sig| trap(sig) { quit!(server, handler_name) } }
           set :running, true
         end
@@ -1268,6 +1268,7 @@ module Sinatra
     set :method_override, false
     set :default_encoding, "utf-8"
     set :add_charset, [/^text\//, 'application/javascript', 'application/xml', 'application/xhtml+xml']
+    set :extraoptions, {}
 
     class << self
       alias_method :methodoverride?, :method_override?
